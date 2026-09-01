@@ -34,8 +34,54 @@ WHERE email = $1 ;
 
 // get all users//
 
-// get users by id //
+export const getAllUsers = async () => {
+  const result = await pool.query(
+    `
+  SELECT id , name , email , role , created_at 
+  FROM users
+  ORDER BY created_at DESC;
+  `
+  );
+  return result.rows;
+}
 
-// update users//
+// get users by id//
 
-// delete users//
+export const getUserById = async (id) => {
+  const result = await pool.query(
+    `
+    SELECT id, name, email, role, created_at 
+    FROM users
+    WHERE id = $1;
+    `,
+    [id]
+  );
+  return result.rows[0];
+}
+
+// update user
+
+export const updateuser = async (id, data) => {
+  const result = await pool.query(
+    `
+    UPDATE users 
+    SET 
+    SET name = $2,
+    email = $2 ,
+    WHERE id = $1
+    RETURNING id, name, email, role, created_at;
+    ` ,
+    [name, email, id]
+  )
+  return result.rows[0];
+}
+// delete//
+export const deleteUser = async (id) => {
+  const result = await pool.query(
+    ` DELETE FROM users
+      WHERE id = $1 
+      RETURNING id, name, email, role;
+       `,
+    [id]);
+  return result.rows[0];
+};
