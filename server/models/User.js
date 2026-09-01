@@ -62,19 +62,25 @@ export const getUserById = async (id) => {
 // update user
 
 export const updateuser = async (id, data) => {
+  const { name, email } = data;
   const result = await pool.query(
     `
     UPDATE users 
-    SET 
+    
     SET name = $2,
-    email = $2 ,
+    email = $3 
     WHERE id = $1
     RETURNING id, name, email, role, created_at;
     ` ,
-    [name, email, id]
-  )
+
+
+    [id, name, email]
+
+  );
   return result.rows[0];
-}
+};
+
+
 // delete//
 export const deleteUser = async (id) => {
   const result = await pool.query(
