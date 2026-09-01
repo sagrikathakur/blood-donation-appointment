@@ -8,7 +8,7 @@ export const createUser = async (data) => {
     `
     INSERT INTO users(name , email , password , role)
     VALUES ($1 , $2 , $3 , $4)
-    RETURNING id, name, email, role, created_at; ;
+    RETURNING id, name, email, role, created_at; 
 
     ` ,
     [name, email, password, role]
