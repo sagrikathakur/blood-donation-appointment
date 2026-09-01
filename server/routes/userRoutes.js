@@ -2,6 +2,7 @@ import express from 'express';
 import {
   createUsersController,
   loginUserController,
+  logoutUserController,
   getAllUsersController,
   getUserByIdController,
   updateUserController,
@@ -18,6 +19,7 @@ router.post('/register', validate(registerSchema), createUsersController);
 router.post('/login', validate(loginSchema), loginUserController);
 
 // Protected routes
+router.post('/logout', verifyToken, logoutUserController);
 router.get('/', verifyToken, getAllUsersController);
 router.get('/:id', verifyToken, getUserByIdController);
 router.put('/:id', verifyToken, validate(updateUserSchema), updateUserController);
