@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
+import { safeJsonParser } from './middlewares/jsonParser.js';
+import { errorHandler } from './middlewares/errorHandle.js';
 
 dotenv.config();
 
@@ -11,7 +13,7 @@ const port = process.env.PORT || 3000;
 
 // Middleware//
 app.use(cors());
-app.use(express.json());
+app.use(safeJsonParser);
 
 // routes//
 app.get('/', (req, res) => {
@@ -21,6 +23,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/users', userRoutes);
+
+// Global Error Handler Middleware//
+app.use(errorHandler);
 
 // listen//
 app.listen(port, () => {

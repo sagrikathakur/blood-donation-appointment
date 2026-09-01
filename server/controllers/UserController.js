@@ -6,7 +6,15 @@ import { createUser, findUserByEmail, getAllUsers, getUserById, updateuser, dele
 export const createUsersController = async (req, res) => {
 
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, confirmPassword, role } = req.body;
+
+    if (confirmPassword && password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Passwords do not match'
+      });
+    }
+
     // check if mail exited//
     const emailController = await findUserByEmail(email);
 
@@ -38,16 +46,6 @@ export const createUsersController = async (req, res) => {
     });
   }
 };
-
-// compare password//
-const isPasswordValid = await bcrypt.compare(password, user.password);
-if (!isPasswordValid) {
-  return res.status(401).json({
-    success: false,
-    message: 'Invalid password'
-  });
-}
-
 
 // login user//
 export const loginUserController = async (req, res) => {
