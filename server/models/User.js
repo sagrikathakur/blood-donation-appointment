@@ -62,22 +62,33 @@ export const getUserById = async (id) => {
 // update user
 
 export const updateuser = async (id, data) => {
-  const { name, email } = data;
-  const result = await pool.query(
-    `
-    UPDATE users 
-    
-    SET name = $2,
-    email = $3 
-    WHERE id = $1
-    RETURNING id, name, email, role, created_at;
-    ` ,
-
-
-    [id, name, email]
-
-  );
-  return result.rows[0];
+  const { name, email, role } = data;
+  if (role) {
+    const result = await pool.query(
+      `
+      UPDATE users 
+      SET name = $2,
+          email = $3,
+          role = $4
+      WHERE id = $1
+      RETURNING id, name, email, role, created_at;
+      `,
+      [id, name, email, role]
+    );
+    return result.rows[0];
+  } else {
+    const result = await pool.query(
+      `
+      UPDATE users 
+      SET name = $2,
+          email = $3
+      WHERE id = $1
+      RETURNING id, name, email, role, created_at;
+      `,
+      [id, name, email]
+    );
+    return result.rows[0];
+  }
 };
 
 
